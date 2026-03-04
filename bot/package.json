@@ -1,0 +1,21 @@
+{
+  "name": "telegram-crm-bot",
+  "version": "1.0.0",
+  "description": "Telegram Bot for CRM notifications",
+  "main": "bot.js",
+  "type": "module",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
+  "dependencies": {
+    "telegraf": "^4.16.3",
+    "dotenv": "^16.4.5",
+    "node-cron": "^3.0.3",
+    "axios": "^1.6.7",
+    "date-fns": "^3.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
