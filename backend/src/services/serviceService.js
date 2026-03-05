@@ -1,6 +1,19 @@
-import { query } from '../database/connection.js';
+// backend/src/services/serviceService.js
+
+import { query } from '../database/connection.js'; // Используем твой стандартный способ
 
 export class ServiceService {
+  // Исправленный метод для работы с SQL
+  static async getAll() {
+    const result = await query(
+      `SELECT * FROM services 
+       WHERE is_active = true 
+       ORDER BY created_at DESC`
+    );
+    return result.rows; // Возвращаем массив услуг
+  }
+
+  // Твой старый метод (оставляем как есть)
   static async getByMasterId(masterId) {
     const result = await query(
       `SELECT * FROM services 
@@ -10,6 +23,7 @@ export class ServiceService {
     );
     return result.rows;
   }
+}
 
   static async getAll() {
   const { data, error } = await supabase
