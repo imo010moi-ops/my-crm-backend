@@ -1,11 +1,11 @@
 import { ServiceService } from '../services/serviceService.js';
 
 export async function serviceRoutes(fastify, options) {
-  // Get all services for a master (public)
-  fastify.get('/master/:masterId/services', async (request, reply) => {
+  // 👇 ВОТ ЭТОТ БЛОК НУЖНО ДОБАВИТЬ:
+  // Главный путь для Mini App (без masterId)
+  fastify.get('/services', async (request, reply) => {
     try {
-      const { masterId } = request.params;
-      const services = await ServiceService.getByMasterId(masterId);
+      const services = await ServiceService.getAll();
       return { services };
     } catch (error) {
       fastify.log.error(error);
@@ -13,17 +13,17 @@ export async function serviceRoutes(fastify, options) {
     }
   });
 
-  // Get my services (master only)
-  fastify.get('/services', async (request, reply) => {
-  try {
-    // Получаем вообще все услуги из базы для теста
-    const services = await ServiceService.getAll(); 
-    return { services };
-  } catch (error) {
-    fastify.log.error(error);
-    return reply.status(500).send({ error: 'Failed to get services' });
-  }
-});
+  // Остальные твои маршруты (оставляем как есть)
+  fastify.get('/master/:masterId/services', async (request, reply) => {
+    try {
+      const { masterId } = request.params;
+      const services = await ServiceService.getByMasterId(masterId);
+      return { services };
+    } catch (error) {
+      fastify.log.error(error);
+      return reply.status(500).send({ error: 'Failed' });
+    }
+  });
   fastify.get('/my-services', { preHandler: [fastify.authenticate, fastify.requireMaster] }, async (request, reply) => {
     try {
       const services = await ServiceService.getByMasterId(request.user.userId);
