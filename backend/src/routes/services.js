@@ -14,6 +14,16 @@ export async function serviceRoutes(fastify, options) {
   });
 
   // Get my services (master only)
+  fastify.get('/services', async (request, reply) => {
+  try {
+    // Получаем вообще все услуги из базы для теста
+    const services = await ServiceService.getAll(); 
+    return { services };
+  } catch (error) {
+    fastify.log.error(error);
+    return reply.status(500).send({ error: 'Failed to get services' });
+  }
+});
   fastify.get('/my-services', { preHandler: [fastify.authenticate, fastify.requireMaster] }, async (request, reply) => {
     try {
       const services = await ServiceService.getByMasterId(request.user.userId);
