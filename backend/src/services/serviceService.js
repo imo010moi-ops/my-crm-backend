@@ -11,6 +11,14 @@ export class ServiceService {
     return result.rows;
   }
 
+  static async getAll() {
+  const { data, error } = await supabase
+    .from('services')
+    .select('*');
+  if (error) throw error;
+  return data;
+}
+  
   static async getById(id) {
     const result = await query(
       'SELECT * FROM services WHERE id = $1',
