@@ -1,18 +1,6 @@
-FROM node:20-alpine
-
+FROM node:20
 WORKDIR /app
-
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy source code
+RUN npm install --omit=dev
 COPY . .
-
-# Expose port
-EXPOSE 3000
-
-# Start the server
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
