@@ -1,19 +1,19 @@
 // backend/src/services/serviceService.js
 
-import { query } from '../database/connection.js'; // Используем твой стандартный способ
+import { query } from '../database/connection.js';
 
 export class ServiceService {
-  // Исправленный метод для работы с SQL
+  // 1. Получить все активные услуги (для главного экрана Mini App)
   static async getAll() {
     const result = await query(
       `SELECT * FROM services 
        WHERE is_active = true 
        ORDER BY created_at DESC`
     );
-    return result.rows; // Возвращаем массив услуг
+    return result.rows;
   }
 
-  // Твой старый метод (оставляем как есть)
+  // 2. Получить услуги конкретного мастера
   static async getByMasterId(masterId) {
     const result = await query(
       `SELECT * FROM services 
@@ -23,16 +23,8 @@ export class ServiceService {
     );
     return result.rows;
   }
-}
 
-  static async getAll() {
-  const { data, error } = await supabase
-    .from('services')
-    .select('*');
-  if (error) throw error;
-  return data;
-}
-  
+  // 3. Получить одну услугу по ID
   static async getById(id) {
     const result = await query(
       'SELECT * FROM services WHERE id = $1',
@@ -41,6 +33,7 @@ export class ServiceService {
     return result.rows[0];
   }
 
+  // 4. Создать новую услугу
   static async create(serviceData) {
     const { master_id, name, description, price, duration_minutes, color } = serviceData;
     
@@ -53,6 +46,7 @@ export class ServiceService {
     return result.rows[0];
   }
 
+  // 5. Обновить данные услуги
   static async update(id, serviceData) {
     const { name, description, price, duration_minutes, color, is_active } = serviceData;
     
@@ -66,8 +60,8 @@ export class ServiceService {
     return result.rows[0];
   }
 
+  // 6. Удалить услугу (мягкое удаление - просто деактивируем)
   static async delete(id) {
-    // Soft delete
     const result = await query(
       'UPDATE services SET is_active = false, updated_at = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *',
       [id]
@@ -75,6 +69,7 @@ export class ServiceService {
     return result.rows[0];
   }
 
+  // 7. Получить услуги мастера со статистикой по доходам
   static async getMasterServicesWithStats(masterId) {
     const result = await query(
       `SELECT s.*, 
