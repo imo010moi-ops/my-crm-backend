@@ -15,7 +15,8 @@ const fastify = Fastify({
 
 // Register plugins
 await fastify.register(cors, {
-  origin: config.frontend.url,
+  // Разрешаем все домены (символ *)
+  origin: true, 
   credentials: true
 });
 
